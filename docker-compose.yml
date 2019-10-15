@@ -1,0 +1,50 @@
+version: '3'
+services:
+        nginx:
+                restart: always
+                build: code/nginx
+                ports:
+                        - "8080:80"
+                networks:
+                        - global
+        sitea:
+                build: code/siteA
+                networks:
+                        - global               
+        siteb:
+                build: code/siteB
+                networks:
+                        - global
+        wp:
+                depends_on:
+                        - db 
+                image: wordpress
+                environment:
+                        WORDPRESS_DB_HOST: db
+                        WORDPRESS_DB_PASSWORD: root
+                        WORDPRESS_DB_NAME: db
+                        WORDPRESS_DB_USER: root
+                networks:
+                        - wpdbnet
+                        - global
+        db:
+                image: mysql:5.7
+                environment:
+                        MYSQL_ROOT_PASSWORD: root
+                        MYSQL_DATABASE: db
+                networks:
+                        - wpdbnet
+        phpadmin:
+                depends_on:
+                        - db
+                image: phpmyadmin/phpmyadmin
+                environment:
+                        MYSQL_ROOT_PASSWORD: root
+                networks:
+                        - wpdbnet
+                        - global
+networks:
+        wpdbnet:
+                driver: bridge
+        global:
+                driver: bridge
