@@ -43,6 +43,20 @@ services:
                 networks:
                         - wpdbnet
                         - global
+
+        loadbalancer:
+                build: code/loadBalancer
+                networks:
+                        - global
+        sitec1:
+               build: code/siteC1
+               networks:
+                       - global
+        sitec2:
+                build: code/siteC2
+                networks:
+                        - global
+
 networks:
         wpdbnet:
                 driver: bridge
